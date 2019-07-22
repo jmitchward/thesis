@@ -1,11 +1,3 @@
-# isinstance(variable, type)
-# isinstance(stringTest, str)
-
-# This will be used to make the dataset ready to be
-# processed.
-
-import ML_base
-
 
 def dataset_discovery(data):
     # List for each of the feature types
@@ -18,8 +10,6 @@ def dataset_discovery(data):
     if data_type.lower() == "yes":
         classifier = input("What column will the classifier be found?")
         classifier = int(classifier)
-
-        #ML_base.machine_learning.encode_values(data, classifier)
 
     #    elif data_type.lower() == "unsupervised":
     #        classifier = 999
