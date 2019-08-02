@@ -9,7 +9,7 @@ import ML_base
 # Features are coluns, datapoints are rows
 
 
-class logistic_regression():
+class logistic_regression:
 
     def __init__(self, train_data, test_data, train_class, test_class):
         print("Training data retrieved.")
@@ -75,7 +75,7 @@ class logistic_regression():
         self.classifier = self.test_class
         for row in range(len(self.data)):
             print("Predicting {:3.2%}".format(row / (len(self.data))), end="\r")
-            row = self.data.iloc[row]
+            ow = self.data.iloc[row]
             prediction = self.predictor(row)
             # Rounds prediction result to 2 decimal places.
             if prediction > 0.5:

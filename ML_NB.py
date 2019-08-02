@@ -7,43 +7,61 @@
 import ML_base
 
 
-class naive_bayes(ML_base.machine_learning):
+class naive_bayes:
 
-    def __init__(self, train_data, test_data):
+    def __init__(self, train_data, test_data, train_class, test_class):
         print("Training data retrieved.")
-        self.train_data = train_data
+        self.data = train_data
         print("Testing data retrieved.")
         self.test_data = test_data
+        self.train_class = train_class
+        self.test_class = test_class
+        self.classProb = [0, 0]
+        self.above_count = 0
+        self.below_count = 0
 
-    def class_probability(self, row, aboveFiveProb, belowFiveProb, summaries):
-        aboveProb = aboveFiveProb
-        belowProb = belowFiveProb
-        for eachValue in range(41):
-            aboveProb *= self.probability(row[eachValue], summaries[eachValue][0], summaries[eachValue][1])
-            belowProb *= self.probability(row[eachValue], summaries[eachValue][0], summaries[eachValue][1])
-        return aboveProb, belowProb
+        self.main()
 
     # Determines which class a given sample belongs to
     def predict(self, row, summaries):
         # Returns the probability of each classification
-        classProb = (self.train_data[41].value_counts() / len(self.train_data))
+        self.class_count()
         # Probability of a sample belonging to 50000+
-        aboveFiveProb = classProb[0]
+        # classProb[0]
         # Probability of a sample belonging to -50000
-        belowFiveProb = classProb[1]
-        probabilities = self.class_probability(row, aboveFiveProb, belowFiveProb, summaries)
-        if probabilities[0] > probabilities[1]:
+        # classProb[1]
+        self.class_probability(row, summaries)
+        if self.classProb[0] > self.classProb[1]:
             return 0
         else:
             return 1
 
+    def class_count(self):
+        local_above = 0
+        local_below = 0
+        for each in range(len(self.test_class)):
+            if self.test_class[each] == 0:
+                local_above += 1
+            else:
+                local_below += 1
+        self.classProb[0] = local_above / len(self.data)
+        self.classProb[1] = local_below / len(self.data)
+
+    def class_probability(self, row, summaries):
+        for eachValue in range(self.data.columns):
+            self.classProb[0] *= ML_base.machine_learning.probability(row[eachValue], summaries[eachValue][0],
+                                                                      summaries[eachValue][1])
+            self.classProb[1] *= ML_base.machine_learning.probability(row[eachValue], summaries[eachValue][0],
+                                                                      summaries[eachValue][1])
+
     def main(self):
         predictions = list()
-        dataSize = len(self.testData)
-        summaries = self.basic_calc(self.train_data)
-        for i in range(dataSize):
-            row = self.test_data.iloc[i]
-            output = self.predict(row, summaries)
+        print("Calculating feature summaries.")
+        summaries = ML_base.machine_learning.basic_calc(self.data)
+        print("Beginning predictions.")
+        for i in range(len(self.test_data)):
+            print("Predicting {:3.2%}".format(i / (len(self.test_data))), end="\r")
+            output = self.predict(self.test_data.iloc[i], summaries)
             predictions.append(output)
         print('Determining accuracy.')
-        self.accuracy(predictions, self.test_data)
+        ML_base.machine_learning.accuracy(self.test_class, predictions)

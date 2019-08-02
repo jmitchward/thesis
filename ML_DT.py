@@ -3,13 +3,14 @@
 import ML_base
 
 
-class decision_tree(ML_base.machine_learning):
+class decision_tree:
 
     def __init__(self, train_data, test_data):
         print("Training data retrieved.")
         self.dataset = train_data
         print("Testing data retrieved.")
         self.test_data = test_data
+        self.branch_class = []
 
         limited_dataset = self.dataset[:200]
         non_impact = [11, 13, 6, 10, 5, 25, 14, 26, 27, 29, 21, 33, 37, 28, 20, 32, 40, 24, 34, 35]
@@ -21,9 +22,9 @@ class decision_tree(ML_base.machine_learning):
         class0, class1 = 0, 0
         for eachRow in range(len(branch)):
             if branch[eachRow][41] == 1.0:
-                class0 += 1
+                self.branch_class[0] += 1
             else:
-                class1 += 1
+                self.branch_class[1] += 1
         return class0, class1
 
     def first_test(self, index, value):

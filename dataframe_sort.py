@@ -1,4 +1,3 @@
-
 def dataset_discovery(data):
     # List for each of the feature types
     categorical = []
@@ -20,7 +19,7 @@ def dataset_discovery(data):
     for every in range(len(data.columns)):
         for each in range(len(data)):
             # for each column, use every row up to 100
-            if isinstance(data[every][each], str):
+            if type(data.iloc[every][each]) == str:
                 # If any value within that column is a string, it categorical
                 categorical.append(every)
                 # Add it to the list then break to the next column
@@ -37,4 +36,17 @@ def dataset_discovery(data):
         if everyFeature == classifier:
             numerical.remove(classifier)
 
+#    print("Discovered", len(categorical), "categorical features.")
+#    for feature in range(len(categorical)):
+#        print(categorical[feature], end=",")
+#
+#    print("\nDiscovered", len(numerical), " numerical features.")
+#    for features in range(len(numerical)):
+#        print(numerical[features], end=",")
+
+#    doubleCheck = input("Is this correct?")
+
+#    if doubleCheck.lower() == "yes":
     return categorical, numerical, classifier
+#    else:
+#        dataset_discovery(data)

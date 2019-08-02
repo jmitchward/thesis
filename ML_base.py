@@ -7,16 +7,15 @@ import pickle
 
 
 class machine_learning:
-
     numFeatures = []
     catFeatures = []
     questionFeatures = []
 
     @staticmethod
     def encode_values(data, column):
-        data.loc[:, column] = data.loc[:, column].astype('category')
-        data.loc[:, column] = data.loc[:, column].cat.codes
-        data.loc[:, column] = data.loc[:, column].astype('int')
+        data[column] = data[column].astype('category')
+        data[column] = data[column].cat.codes
+        data[column] = data[column].astype('int')
 
     @staticmethod
     def format_data(data, feature_set):
@@ -24,9 +23,11 @@ class machine_learning:
         machine_learning.catFeatures = feature_set[0]
         machine_learning.numFeatures = feature_set[1]
 
-        print('Encoding categorical features.')
+        print("Searching for illegal characters.")
         for value in machine_learning.catFeatures:
             data[value].replace(' ?', data.describe(include='all')[value][2], inplace=True)
+
+        print('Encoding categorical features.')
         for each in machine_learning.catFeatures:
             machine_learning.encode_values(data, each)
 
@@ -52,7 +53,7 @@ class machine_learning:
         summaries = list()
 
         # for each in hiImpact:
-        for each in len(data.columns):
+        for each in range(len(data.columns)):
             mean = data[each].mean()
             sdev = data[each].std()
             # creates a list containing the mean and s-dev for each feature in the set.
@@ -73,14 +74,25 @@ class machine_learning:
         return round(((correct / dSize) * 100.0))
 
     @staticmethod
-    def accuracy(data, predict):
+    def accuracy(classifier, predict):
         print('Beginning accuracy rating.')
         correct = 0
-        dSize = len(data)
-        for i in range(dSize):
-            if data.iloc[i][41] == predict[i]:
+        for i in range(len(classifier)):
+            print("Scoring {:3.2%}".format(i / (len(classifier))), end="\r")
+            if classifier[i] == predict[i]:
                 correct += 1
-        print('Accuracy:', round(((correct / dSize) * 100.0)), '%')
+        print('Accuracy:', round(((correct / len(classifier)) * 100.0)), '%')
+
+    @staticmethod
+    def feature_define(data):
+        print("Please enter the feature names.")
+        feature_names = []
+
+        for each in range(len(data.columns)):
+            print(data.iloc[:5][each])
+            feature_title = input("What is the title of this feature?")
+            feature_names.append(feature_title)
+        return feature_names
 
     def save_instance(self):
         with open('./ml_data/lr_output', 'wb') as log_output:
